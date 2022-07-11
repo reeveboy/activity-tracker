@@ -1,8 +1,9 @@
 import MenuBar from "../components/MenuBar/MenuBar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Tracker from "../components/Tracker/Tracker";
+import { withProtected } from "../src/hooks/route";
 
-export default function Home() {
+const Home = () => {
   return (
     <div className="flex flex-col">
       <MenuBar />
@@ -12,4 +13,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default withProtected(Home);

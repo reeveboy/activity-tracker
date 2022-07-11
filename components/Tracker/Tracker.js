@@ -8,6 +8,47 @@ const Tracker = () => {
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
 
+  const form = () => {
+    return (
+      <div>
+        <form className="flex flex-col items-center">
+          <select className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2">
+            <option disabled selected hidden value="category">
+              Category
+            </option>
+            <option value="general">General</option>
+            <option value="project">Project</option>
+            <option value="mdlw">MDLW</option>
+            <option value="support">Support</option>
+          </select>
+          <input
+            className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2"
+            type="text"
+            placeholder="project no."
+          />
+          <input
+            className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2"
+            type="text"
+            placeholder="customer"
+          />
+          <input
+            className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2"
+            type="text"
+            placeholder="task"
+          />
+          <input
+            className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2"
+            type="text"
+            placeholder="hrs planned"
+          />
+          <div className="mt-2">
+            <button className="py-2 px-5 bg-orange rounded-lg">Add</button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col w-full p-4 bg-secondary">
       <div className="flex items-center">
@@ -191,7 +232,7 @@ const Tracker = () => {
         onExitComplete={() => null}
         exitBeforeEnter={true}>
         {modalOpen && (
-          <Modal handleClose={close} modalOpen={modalOpen} text="yooo" />
+          <Modal handleClose={close} modalOpen={modalOpen} text={form()} />
         )}
       </AnimatePresence>
     </div>
