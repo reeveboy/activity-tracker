@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
+import NavButton from "./NavButton";
+import { useRouter } from "next/router";
 
 const Sidebar = () => {
-  return (
-    <div className="flex flex-col bg-white h-[90vh] w-[12rem] border-r border-black">
-      <div className="py-4 px-2 border-b border-black flex items-center">
+  const icon_size = 25;
+
+  const links = [
+    {
+      icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
           role="img"
-          width="30"
-          height="30"
+          width={icon_size}
+          height={icon_size}
           preserveAspectRatio="xMidYMid meet"
           viewBox="0 0 100 100">
           <path
@@ -18,15 +22,17 @@ const Sidebar = () => {
             color="black"
           />
         </svg>
-        <span className="text-lg ml-4">Tracker</span>
-      </div>
-      <div className="py-4 px-2 border-b border-black flex items-center">
+      ),
+      text: "Tracker",
+    },
+    {
+      icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
           role="img"
-          width="30"
-          height="30"
+          width={icon_size}
+          height={icon_size}
           preserveAspectRatio="xMidYMid meet"
           viewBox="0 0 16 16">
           <path
@@ -34,15 +40,17 @@ const Sidebar = () => {
             d="M1 3.5A1.5 1.5 0 0 1 2.5 2h7A1.5 1.5 0 0 1 11 3.5v5A1.5 1.5 0 0 1 9.5 10h-7A1.5 1.5 0 0 1 1 8.5v-5ZM2.5 3a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5h-7Zm2.585 10A1.5 1.5 0 0 0 6.5 14h3A5.5 5.5 0 0 0 15 8.5v-1a1.5 1.5 0 0 0-1-1.415V8.5A4.5 4.5 0 0 1 9.5 13H5.085ZM4.5 12a1.5 1.5 0 0 1-1.415-1H9.5A2.5 2.5 0 0 0 12 8.5V4.085A1.5 1.5 0 0 1 13 5.5v3A3.5 3.5 0 0 1 9.5 12h-5Z"
           />
         </svg>
-        <span className="text-lg ml-4">Projects</span>
-      </div>
-      <div className="py-4 px-2 border-b border-black flex items-center">
+      ),
+      text: "Projects",
+    },
+    {
+      icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
           role="img"
-          width="30"
-          height="30"
+          width={icon_size}
+          height={icon_size}
           preserveAspectRatio="xMidYMid meet"
           viewBox="0 0 48 48">
           <path
@@ -52,15 +60,17 @@ const Sidebar = () => {
             clip-rule="evenodd"
           />
         </svg>
-        <span className="text-lg ml-4">Customers</span>
-      </div>
-      <div className="py-4 px-2 border-b border-black flex items-center">
+      ),
+      text: "Customers",
+    },
+    {
+      icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
           role="img"
-          width="30"
-          height="30"
+          width={icon_size}
+          height={icon_size}
           preserveAspectRatio="xMidYMid meet"
           viewBox="0 0 1024 1024">
           <path
@@ -68,15 +78,17 @@ const Sidebar = () => {
             d="M888 792H200V168c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v688c0 4.4 3.6 8 8 8h752c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm-600-80h56c4.4 0 8-3.6 8-8V560c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v144c0 4.4 3.6 8 8 8zm152 0h56c4.4 0 8-3.6 8-8V384c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v320c0 4.4 3.6 8 8 8zm152 0h56c4.4 0 8-3.6 8-8V462c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v242c0 4.4 3.6 8 8 8zm152 0h56c4.4 0 8-3.6 8-8V304c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v400c0 4.4 3.6 8 8 8z"
           />
         </svg>
-        <span className="text-lg ml-4">Reports</span>
-      </div>
-      <div className="py-4 px-2 border-b border-black flex items-center">
+      ),
+      text: "Reports",
+    },
+    {
+      icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
           role="img"
-          width="30"
-          height="30"
+          width={icon_size}
+          height={icon_size}
           preserveAspectRatio="xMidYMid meet"
           viewBox="0 0 16 16">
           <path
@@ -84,8 +96,18 @@ const Sidebar = () => {
             d="M6.002 4a1.998 1.998 0 1 1 3.996 0a1.998 1.998 0 0 1-3.996 0ZM8 3.002a.998.998 0 1 0 0 1.996a.998.998 0 0 0 0-1.996ZM11 4.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0Zm1.5-.5a.5.5 0 1 0 0 1a.5.5 0 0 0 0-1Zm-9-1a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3ZM3 4.5a.5.5 0 1 1 1 0a.5.5 0 0 1-1 0ZM4.268 7A1.99 1.99 0 0 0 4 8H2v2.5a1.5 1.5 0 0 0 2.096 1.377c.074.331.19.647.34.942A2.5 2.5 0 0 1 1 10.5V8a1 1 0 0 1 1-1h2.268Zm7.296 5.819A2.5 2.5 0 0 0 15 10.5V8a1 1 0 0 0-1-1h-2.268c.17.294.268.635.268 1h2v2.5a1.5 1.5 0 0 1-2.096 1.377c-.075.331-.19.647-.34.942ZM6 6.999a1 1 0 0 0-1 1V11a3 3 0 0 0 6 0V8a1 1 0 0 0-1-1H6Zm0 1h4V11a2 2 0 0 1-4 0V8Z"
           />
         </svg>
-        <span className="text-lg ml-4">Team</span>
-      </div>
+      ),
+      text: "Team",
+    },
+  ];
+
+  return (
+    <div className="flex flex-col bg-white min-w-[12rem] border-r border-black">
+      <NavButton svg={links[0].icon} name={links[0].text} />
+      <NavButton svg={links[1].icon} name={links[1].text} />
+      <NavButton svg={links[2].icon} name={links[2].text} />
+      <NavButton svg={links[3].icon} name={links[3].text} />
+      <NavButton svg={links[4].icon} name={links[4].text} />
     </div>
   );
 };

@@ -50,7 +50,7 @@ const Tracker = () => {
   };
 
   return (
-    <div className="flex flex-col w-full p-4 bg-secondary">
+    <div className="flex flex-col w-full p-4">
       <div className="flex items-center">
         <span className="mr-3">Week #27</span>
         <button>
