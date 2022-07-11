@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 
-const NavButton = ({ svg, name, setPath }) => {
+const NavButton = ({ svg, name }) => {
   const router = useRouter();
   let check = false;
   if (

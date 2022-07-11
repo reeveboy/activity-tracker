@@ -8,9 +8,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
       <AuthStateChanged>
-        <Head>
-          <Component {...pageProps} />
-        </Head>
+        <Component {...pageProps} />
       </AuthStateChanged>
     </AuthProvider>
   );

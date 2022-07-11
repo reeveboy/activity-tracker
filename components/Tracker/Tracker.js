@@ -12,7 +12,7 @@ const Tracker = () => {
     return (
       <div>
         <form className="flex flex-col items-center">
-          <select className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2">
+          <select className="mt-2 rounded-lg bg-white w-[300px] px-3 py-2">
             <option disabled selected hidden value="category">
               Category
             </option>
@@ -52,7 +52,7 @@ const Tracker = () => {
   return (
     <div className="flex flex-col w-full p-4">
       <div className="flex items-center">
-        <span className="mr-3">Week #27</span>
+        <span className="mr-3 text-xl font-bold">Week #27</span>
         <button>
           <svg
             xmlns="http://www.w3.org/2000/svg"

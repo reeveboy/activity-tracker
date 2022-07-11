@@ -8,7 +8,7 @@ const MenuBar = ({ name }) => {
   return (
     <div className="flex w-full h-[60px] items-center justify-between p-4 bg-primary bg-[url('/banner.png')]">
       <span className="text-2xl text-white font-medium">
-        OPTEL Time Tracking
+        <span className="font-bold">OPTEL</span> Time Tracking
       </span>
       <div className="flex items-center">
         <span className="text-lg text-white mr-3">{name}</span>
