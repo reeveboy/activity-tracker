@@ -34,9 +34,6 @@ a {
 }
 
 .modal {
-  width: 40%;
-  height: 60%;
-
   margin: auto;
   padding: 2rem 2rem;
   border-radius: 12px;

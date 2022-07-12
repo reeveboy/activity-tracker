@@ -10,4 +10,4 @@ export const FIREBASE_CONFIG = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-initializeApp(FIREBASE_CONFIG);
+export const app = initializeApp(FIREBASE_CONFIG);

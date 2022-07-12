@@ -50,7 +50,7 @@ const Tracker = () => {
   };
 
   return (
-    <div className="flex flex-col w-full p-4">
+    <div className="flex flex-col w-full p-4 overflow-y-auto">
       <div className="flex items-center">
         <span className="mr-3 text-xl font-bold">Week #27</span>
         <button>
@@ -83,9 +83,9 @@ const Tracker = () => {
               <path
                 fill="none"
                 stroke="black"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="m11 5l-7 7l7 7m-7-7h16"
               />
             </svg>
@@ -103,9 +103,9 @@ const Tracker = () => {
               <path
                 fill="none"
                 stroke="black"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M4 12h16m-7-7l7 7l-7 7"
               />
             </svg>
@@ -113,6 +113,7 @@ const Tracker = () => {
         </div>
         <div>
           <select
+            defaultValue={"You"}
             className="px-5 py-3 w-[200px] border-none bg-white"
             name="user"
             id="select_user">
@@ -131,7 +132,7 @@ const Tracker = () => {
         </button>
       </div>
 
-      <table class="mt-4 table-auto border border-slate-600 rounded-lg bg-white">
+      <table className="mt-4 table-auto border border-slate-600 rounded-lg bg-white">
         <thead>
           <tr className="text-left text-lg border-b border-slate-500">
             <th className="py-3 px-4">Category</th>
@@ -213,7 +214,7 @@ const Tracker = () => {
                 <path
                   fill="black"
                   d="M8.07 31.6A2.07 2.07 0 0 1 6 29.53V6.32a2.07 2.07 0 0 1 3-1.85l23.21 11.61a2.07 2.07 0 0 1 0 3.7L9 31.38a2.06 2.06 0 0 1-.93.22Zm0-25.34L8 6.32v23.21l.1.06L31.31 18a.06.06 0 0 0 0-.06Z"
-                  class="clr-i-outline clr-i-outline-path-1"
+                  className="clr-i-outline clr-i-outline-path-1"
                 />
                 <path fill="none" d="M0 0h36v36H0z" />
               </svg>
