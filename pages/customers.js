@@ -21,18 +21,17 @@ const Customers = ({ auth }) => {
   const db = getFirestore(app);
 
   const [customers, setCustomers] = useState([]);
-  const newCustRef = doc(collection(db, "customers"));
-
-  const q = query(collection(db, "customers"), orderBy("customer_name"));
 
   useEffect(() => {
-    onSnapshot(q, (snapshot) => {
+    const q = query(collection(db, "customers"), orderBy("customerName"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const custs = [];
       snapshot.forEach((doc) => {
         custs.push(doc.data());
       });
       setCustomers(custs);
     });
+    return unsubscribe;
   }, []);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,7 +50,8 @@ const Customers = ({ auth }) => {
 
     if (nameField.length < 2) return;
 
-    await setDoc(newCustRef, { customer_name: nameField });
+    const newCustRef = doc(collection(db, "customers"));
+    await setDoc(newCustRef, { customerName: nameField });
 
     setNameField("");
     close();
@@ -100,7 +100,7 @@ const Customers = ({ auth }) => {
             <tbody>
               {customers.map((customer, idx) => (
                 <tr key={idx} className="text-left border-b border-slate-500">
-                  <td className="py-3 px-4">{customer.customer_name}</td>
+                  <td className="py-3 px-4">{customer.customerName}</td>
                 </tr>
               ))}
             </tbody>

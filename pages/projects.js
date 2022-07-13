@@ -29,40 +29,31 @@ const Projects = ({ auth }) => {
 
   const newProjectRef = doc(collection(db, "projects"));
 
-  const [loading, setLoading] = useState(true);
-
-  const q = query(collection(db, "projects"));
-  const q2 = query(collection(db, "customers"), orderBy("customer_name"));
-
   useEffect(() => {
-    onSnapshot(q, (snapshot) => {
+    const q = query(collection(db, "projects"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       let projs = [];
-      setLoading(true);
-      snapshot.forEach(async (doc) => {
-        let project = { id: doc.id, ...doc.data() };
-        if (project.customerRef) {
-          let cust = await getDoc(project.customerRef);
-          setLoading(false);
-          if (cust.exists()) {
-            project = {
-              ...project,
-              customer: { customer_id: cust.id, ...cust.data() },
-            };
-          }
-        }
-        projs.push(project);
+      snapshot.forEach((doc) => {
+        projs.push({ id: doc.id, ...doc.data() });
       });
       setProjects(projs);
     });
+    return unsubscribe;
+  }, []);
 
-    onSnapshot(q2, (snapshot) => {
+  useEffect(() => {
+    const customerRef = collection(db, "customers");
+
+    const unsubscribe = onSnapshot(customerRef, (snapshot) => {
       const custs = [];
       snapshot.forEach((doc) => {
-        custs.push({ customer_id: doc.id, ...doc.data() });
+        custs.push({ customerId: doc.id, ...doc.data() });
       });
       setCustomers(custs);
     });
-  }, [setProjects]);
+
+    return unsubscribe;
+  }, []);
 
   const handleChange = (e) => {
     setProjectField(e.target.value);
@@ -75,8 +66,8 @@ const Projects = ({ auth }) => {
     if (!selected) return;
 
     await setDoc(newProjectRef, {
-      project_code: projectField,
-      customerRef: doc(db, `customers/${selected[0].customer_id}`),
+      projectCode: projectField,
+      customerName: selected[0].customerName,
     });
 
     setProjectField("");
@@ -133,13 +124,12 @@ const Projects = ({ auth }) => {
               </tr>
             </thead>
             <tbody>
-              {!loading &&
-                projects.map((project, idx) => (
-                  <tr key={idx} className="text-left border-b border-slate-500">
-                    <td className="py-3 px-4">{project.project_code}</td>
-                    <td className="">{project?.customer.customer_name}</td>
-                  </tr>
-                ))}
+              {projects.map((project, idx) => (
+                <tr key={idx} className="text-left border-b border-slate-500">
+                  <td className="py-3 px-4">{project.projectCode}</td>
+                  <td className="">{project.customerName}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
 
