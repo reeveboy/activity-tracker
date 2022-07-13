@@ -53,6 +53,7 @@ const Customers = ({ auth }) => {
 
     await setDoc(newCustRef, { customer_name: nameField });
 
+    setNameField("");
     close();
   };
 

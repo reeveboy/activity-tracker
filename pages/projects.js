@@ -6,11 +6,13 @@ import Modal from "../components/Modal";
 import { withProtected } from "../src/hooks/route";
 import {
   collection,
+  doc,
   getDoc,
   getFirestore,
   onSnapshot,
   orderBy,
   query,
+  setDoc,
 } from "firebase/firestore";
 import { app } from "../src/config/firebase.config";
 import CustomerTypeahead from "../components/Typeahead/CustomerTypeahead";
@@ -23,6 +25,9 @@ const Projects = ({ auth }) => {
   const [projects, setProjects] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [projectField, setProjectField] = useState("");
+
+  const newProjectRef = doc(collection(db, "projects"));
 
   const [loading, setLoading] = useState(true);
 
@@ -53,11 +58,31 @@ const Projects = ({ auth }) => {
     onSnapshot(q2, (snapshot) => {
       const custs = [];
       snapshot.forEach((doc) => {
-        custs.push(doc.data());
+        custs.push({ customer_id: doc.id, ...doc.data() });
       });
       setCustomers(custs);
     });
   }, [setProjects]);
+
+  const handleChange = (e) => {
+    setProjectField(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (projectField.length < 2) return;
+    if (!selected) return;
+
+    await setDoc(newProjectRef, {
+      project_code: projectField,
+      customerRef: doc(db, `customers/${selected[0].customer_id}`),
+    });
+
+    setProjectField("");
+    setSelected(null);
+    close();
+  };
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -67,11 +92,9 @@ const Projects = ({ auth }) => {
   const form = () => {
     return (
       <div>
-        <form
-          // onSubmit={handleSubmit}
-          className="flex flex-col items-center">
+        <form onSubmit={handleSubmit} className="flex flex-col items-center">
           <input
-            // onChange={handleChange}
+            onChange={handleChange}
             className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2"
             type="text"
             placeholder="project code"

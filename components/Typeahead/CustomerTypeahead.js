@@ -9,7 +9,6 @@ const CustomerTypeahead = ({ items, setSelected, isSubmitting }) => {
       ref.current.clear();
     }
   }, [isSubmitting]);
-  console.log(items);
   return (
     <>
       <Typeahead
