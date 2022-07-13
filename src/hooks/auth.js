@@ -13,7 +13,7 @@ export function AuthProvider(props) {
 
   const loginWithGoogle = async () => {
     const res = await AuthService.loginWithGoogle();
-    // console.log(res);
+
     setUser(res.user ?? null);
     setError(res.error ?? "");
   };

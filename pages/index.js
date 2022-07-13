@@ -4,7 +4,7 @@ import Tracker from "../components/Tracker/Tracker";
 import { withProtected } from "../src/hooks/route";
 
 const Home = ({ auth }) => {
-  const { user } = auth;
+  const { user, logout } = auth;
   return (
     <div className="flex flex-col h-[100vh]">
       <MenuBar name={user.displayName} />
@@ -12,6 +12,8 @@ const Home = ({ auth }) => {
         <Sidebar />
         <Tracker />
       </div>
+
+      <button onClick={logout}>Logout</button>
     </div>
   );
 };
