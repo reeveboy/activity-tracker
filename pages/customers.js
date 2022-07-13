@@ -78,7 +78,7 @@ const Customers = ({ auth }) => {
   return (
     <div className="flex flex-col h-[100vh]">
       <MenuBar name={user.displayName} />
-      <div className="flex h-full bg-secondary">
+      <div className="flex h-full bg-second">
         <Sidebar />
         <div className="flex flex-col w-full p-4 overflow-y-auto">
           <div className="flex justify-between">

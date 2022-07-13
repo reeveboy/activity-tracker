@@ -26,7 +26,7 @@ export default function index({ handleClose, text }) {
     <Backdrop onClick={handleClose}>
       <motion.div
         onClick={(e) => e.stopPropagation()}
-        className="modal"
+        className="mod"
         variants={dropIn}
         initial="hidden"
         animate="visible"

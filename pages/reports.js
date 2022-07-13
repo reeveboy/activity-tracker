@@ -8,7 +8,7 @@ const Reports = ({ auth }) => {
   return (
     <div className="flex flex-col h-[100vh]">
       <MenuBar name={user.displayName} />
-      <div className="flex h-full bg-secondary">
+      <div className="flex h-full bg-second">
         <Sidebar />
         Reports
       </div>

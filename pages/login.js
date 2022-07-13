@@ -9,7 +9,7 @@ const Login = ({ auth }) => {
   }
 
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-secondary">
+    <div className="w-full h-screen flex justify-center items-center bg-second">
       <div className="flex flex-col p-8 rounded-lg items-center bg-white">
         <span className="text-2xl">OPTEL Time Tracker</span>
         <button

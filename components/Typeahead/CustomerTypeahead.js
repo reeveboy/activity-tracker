@@ -13,9 +13,9 @@ const CustomerTypeahead = ({ items, setSelected, isSubmitting }) => {
   return (
     <>
       <Typeahead
-        id="basic-typeahead-single"
+        id="customer-typeahead"
         className="typeahead"
-        style={{ height: "40px" }}
+        style={{ height: "40px", width: "300px", marginTop: "1rem" }}
         labelKey="customer_name"
         onChange={(item) => {
           setSelected(item);

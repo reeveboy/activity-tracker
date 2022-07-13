@@ -6,7 +6,7 @@ const MenuBar = ({ name }) => {
     initials += word[0];
   });
   return (
-    <div className="flex w-full h-[60px] items-center justify-between p-4 bg-primary bg-[url('/banner.png')]">
+    <div className="flex w-full h-[60px] items-center justify-between p-4 bg-pri bg-[url('/banner.png')]">
       <span className="text-2xl text-white font-medium">
         <span className="font-bold">OPTEL</span> Time Tracking
       </span>
