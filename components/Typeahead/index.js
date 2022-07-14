@@ -1,7 +1,14 @@
 import { Typeahead } from "react-bootstrap-typeahead";
 import React, { useEffect } from "react";
 
-const CustomerTypeahead = ({ items, setSelected, isSubmitting }) => {
+const CustomerTypeahead = ({
+  items,
+  setSelected,
+  isSubmitting,
+  field,
+  placeholder,
+  len,
+}) => {
   const ref = React.createRef();
   useEffect(() => {
     if (isSubmitting) {
@@ -12,17 +19,17 @@ const CustomerTypeahead = ({ items, setSelected, isSubmitting }) => {
   return (
     <>
       <Typeahead
-        id="customer-typeahead"
+        id={`${field}-typeahead`}
         className="typeahead"
         style={{ height: "40px", width: "300px", marginTop: "1rem" }}
-        labelKey="customerName"
+        labelKey={field}
         onChange={(item) => {
           setSelected(item);
         }}
         options={items}
         paginate={true}
-        minLength={1}
-        placeholder="customer"
+        minLength={len}
+        placeholder={placeholder}
         ref={ref}
       />
     </>

@@ -15,7 +15,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { app } from "../src/config/firebase.config";
-import CustomerTypeahead from "../components/Typeahead/CustomerTypeahead";
+import Typeahead from "../components/Typeahead";
 
 const Projects = ({ auth }) => {
   const { user } = auth;
@@ -91,7 +91,13 @@ const Projects = ({ auth }) => {
             placeholder="project code"
           />
 
-          <CustomerTypeahead items={customers} setSelected={setSelected} />
+          <Typeahead
+            items={customers}
+            setSelected={setSelected}
+            field={"customerName"}
+            placeholder={"customer"}
+            len={1}
+          />
 
           <div className="mt-2">
             <button className="py-2 px-5 bg-orange rounded-lg">Add</button>
