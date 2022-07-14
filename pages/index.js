@@ -12,8 +12,6 @@ const Home = ({ auth }) => {
         <Sidebar />
         <Tracker />
       </div>
-
-      <button onClick={logout}>Logout</button>
     </div>
   );
 };

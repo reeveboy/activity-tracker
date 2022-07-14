@@ -21,7 +21,7 @@ const NavButton = ({ svg, name }) => {
     return (
       <button
         onClick={handleClick}
-        className="py-4 px-2 border-b border-r-4 bg-gray-100 border-pri flex items-center hover:bg-gray-300">
+        className="p-3 border-b border-r-4 bg-gray-100 border-pri flex items-center hover:bg-gray-300">
         {svg}
         <span className="text-lg ml-4">{name}</span>
       </button>
@@ -30,7 +30,7 @@ const NavButton = ({ svg, name }) => {
   return (
     <button
       onClick={handleClick}
-      className="py-4 px-2 border-b border-black flex items-center hover:bg-gray-300">
+      className="p-3 border-b border-black flex items-center hover:bg-gray-300">
       {svg}
       <span className="text-lg ml-4">{name}</span>
     </button>
