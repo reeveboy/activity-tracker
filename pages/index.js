@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import MenuBar from "../components/MenuBar/MenuBar";
-import Sidebar from "../components/Sidebar/Sidebar";
+import Layout from "../components/Layout/Layout";
 import { withProtected } from "../src/hooks/route";
 import { AnimatePresence } from "framer-motion";
 import Modal from "../components/Modal";
@@ -190,100 +189,94 @@ const Home = ({ auth }) => {
     );
   };
   return (
-    <div className="flex flex-col h-[100vh]">
-      <MenuBar name={user.displayName} />
-      <div className="flex h-full bg-second">
-        <Sidebar />
-        <div className="flex flex-col w-full p-4 overflow-y-auto">
-          <div className="flex items-center">
-            <span className="mr-3 text-xl font-bold">Week {week}</span>
-          </div>
-          <div className="flex justify-between items-center mt-4">
-            <div className="flex items-center ">
-              <input
-                className="py-3 px-4 rounded-md"
-                type="date"
-                value={date}
-                onChange={onDateChange}
-              />
-            </div>
-            <div></div>
-          </div>
-          <div className="mt-4 flex justify-between">
-            <select
-              defaultValue={"You"}
-              className="rounded-md px-4 py-2 w-[200px] border-none bg-white"
-              name="user"
-              id="select_user">
-              <option value="You">You</option>
-              <option value="Donovan">Donovan</option>
-            </select>
-            <button
-              onClick={() => (modalOpen ? close() : open())}
-              className="py-2 px-3 bg-orange rounded-lg">
-              Add Task
-            </button>
-          </div>
-
-          <table className="mt-4 table-auto border border-slate-600 rounded-lg bg-white">
-            <thead>
-              <tr className="text-left text-lg border-b border-slate-500">
-                <th className="py-3 px-4">Category</th>
-                <th>Project Code</th>
-                <th>Customer</th>
-                <th>Task</th>
-                <th>Planned Hrs</th>
-                <th>Actual Hrs</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {plannedTasks.map((tsk, idx) => (
-                <tr key={idx} className="text-left border-b border-slate-500">
-                  <td className="py-3 px-4">{tsk.category}</td>
-                  <td>{tsk.projectCode}</td>
-                  <td>{tsk.customer}</td>
-                  <td>{tsk.task}</td>
-                  <td>{tsk.plannedHrs}</td>
-                  <td>{tsk.actualHrs}</td>
-                  <td>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                      role="img"
-                      width="25"
-                      height="25"
-                      preserveAspectRatio="xMidYMid meet"
-                      viewBox="0 0 36 36">
-                      <path
-                        fill="black"
-                        d="M8.07 31.6A2.07 2.07 0 0 1 6 29.53V6.32a2.07 2.07 0 0 1 3-1.85l23.21 11.61a2.07 2.07 0 0 1 0 3.7L9 31.38a2.06 2.06 0 0 1-.93.22Zm0-25.34L8 6.32v23.21l.1.06L31.31 18a.06.06 0 0 0 0-.06Z"
-                        className="clr-i-outline clr-i-outline-path-1"
-                      />
-                      <path fill="none" d="M0 0h36v36H0z" />
-                    </svg>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div className="mt-4 text-right">
-            <span>Hrs Completed = </span>
-            <span className="text-lg">2.0 / 37.5</span>
-          </div>
-
-          <AnimatePresence
-            initial={false}
-            onExitComplete={() => null}
-            exitBeforeEnter={true}>
-            {modalOpen && (
-              <Modal handleClose={close} modalOpen={modalOpen} text={form()} />
-            )}
-          </AnimatePresence>
-        </div>
+    <Layout user={user}>
+      <div className="flex items-center">
+        <span className="mr-3 text-xl font-bold">Week {week}</span>
       </div>
-    </div>
+      <div className="flex justify-between items-center mt-4">
+        <div className="flex items-center ">
+          <input
+            className="py-3 px-4 rounded-md"
+            type="date"
+            value={date}
+            onChange={onDateChange}
+          />
+        </div>
+        <div></div>
+      </div>
+      <div className="mt-4 flex justify-between">
+        <select
+          defaultValue={"You"}
+          className="rounded-md px-4 py-2 w-[200px] border-none bg-white"
+          name="user"
+          id="select_user">
+          <option value="You">You</option>
+          <option value="Donovan">Donovan</option>
+        </select>
+        <button
+          onClick={() => (modalOpen ? close() : open())}
+          className="py-2 px-3 bg-orange rounded-lg">
+          Add Task
+        </button>
+      </div>
+
+      <table className="mt-4 table-auto border border-slate-600 rounded-lg bg-white">
+        <thead>
+          <tr className="text-left text-lg border-b border-slate-500">
+            <th className="py-3 px-4">Category</th>
+            <th>Project Code</th>
+            <th>Customer</th>
+            <th>Task</th>
+            <th>Planned Hrs</th>
+            <th>Actual Hrs</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {plannedTasks.map((tsk, idx) => (
+            <tr key={idx} className="text-left border-b border-slate-500">
+              <td className="py-3 px-4">{tsk.category}</td>
+              <td>{tsk.projectCode}</td>
+              <td>{tsk.customer}</td>
+              <td>{tsk.task}</td>
+              <td>{tsk.plannedHrs}</td>
+              <td>{tsk.actualHrs}</td>
+              <td>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  role="img"
+                  width="25"
+                  height="25"
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 36 36">
+                  <path
+                    fill="black"
+                    d="M8.07 31.6A2.07 2.07 0 0 1 6 29.53V6.32a2.07 2.07 0 0 1 3-1.85l23.21 11.61a2.07 2.07 0 0 1 0 3.7L9 31.38a2.06 2.06 0 0 1-.93.22Zm0-25.34L8 6.32v23.21l.1.06L31.31 18a.06.06 0 0 0 0-.06Z"
+                    className="clr-i-outline clr-i-outline-path-1"
+                  />
+                  <path fill="none" d="M0 0h36v36H0z" />
+                </svg>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="mt-4 text-right">
+        <span>Hrs Completed = </span>
+        <span className="text-lg">2.0 / 37.5</span>
+      </div>
+
+      <AnimatePresence
+        initial={false}
+        onExitComplete={() => null}
+        exitBeforeEnter={true}>
+        {modalOpen && (
+          <Modal handleClose={close} modalOpen={modalOpen} text={form()} />
+        )}
+      </AnimatePresence>
+    </Layout>
   );
 };
 
