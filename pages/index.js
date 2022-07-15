@@ -31,7 +31,6 @@ const Home = ({ auth }) => {
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [description, setDescription] = useState("");
   const [hrsPlanned, setHrsPlanned] = useState(null);

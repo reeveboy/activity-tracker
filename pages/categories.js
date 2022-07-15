@@ -14,6 +14,7 @@ import {
 import { app } from "../src/config/firebase.config";
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import Layout from "../components/Layout/Layout";
 
 const Categories = ({ auth }) => {
   const { user } = auth;
@@ -77,46 +78,40 @@ const Categories = ({ auth }) => {
   };
 
   return (
-    <div className="flex flex-col h-[100vh]">
-      <MenuBar name={user.displayName} />
-      <div className="flex h-full bg-second">
-        <Sidebar />
-        <div className="flex flex-col w-full p-4 overflow-y-auto">
-          <div className="flex justify-between">
-            <span className="text-xl ">Categories</span>
-            <button
-              onClick={() => (modalOpen ? close() : open())}
-              className="py-2 px-3 bg-orange rounded-lg hover:scale-105 transition-all">
-              Add new Category
-            </button>
-          </div>
-
-          <table className="mt-4 table-auto border border-slate-600 rounded-lg bg-white">
-            <thead>
-              <tr className="text-left text-lg bg-slate-200 border-b border-slate-500">
-                <td className="py-3 px-4">Category</td>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((category, idx) => (
-                <tr key={idx} className="text-left border-b border-slate-500">
-                  <td className="py-3 px-4">{category.categoryName}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <AnimatePresence
-            initial={false}
-            onExitComplete={() => null}
-            exitBeforeEnter={true}>
-            {modalOpen && (
-              <Modal handleClose={close} modalOpen={modalOpen} text={form()} />
-            )}
-          </AnimatePresence>
-        </div>
+    <Layout user={user}>
+      <div className="flex justify-between">
+        <span className="text-xl ">Categories</span>
+        <button
+          onClick={() => (modalOpen ? close() : open())}
+          className="py-2 px-3 bg-orange rounded-lg hover:scale-105 transition-all">
+          Add new Category
+        </button>
       </div>
-    </div>
+
+      <table className="mt-4 table-auto border border-slate-600 rounded-lg bg-white">
+        <thead>
+          <tr className="text-left text-lg bg-slate-200 border-b border-slate-500">
+            <td className="py-3 px-4">Category</td>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.map((category, idx) => (
+            <tr key={idx} className="text-left border-b border-slate-500">
+              <td className="py-3 px-4">{category.categoryName}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <AnimatePresence
+        initial={false}
+        onExitComplete={() => null}
+        exitBeforeEnter={true}>
+        {modalOpen && (
+          <Modal handleClose={close} modalOpen={modalOpen} text={form()} />
+        )}
+      </AnimatePresence>
+    </Layout>
   );
 };
 
