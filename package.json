@@ -18,7 +18,8 @@
     "react": "18.2.0",
     "react-bootstrap": "^2.4.0",
     "react-bootstrap-typeahead": "^6.0.0-rc.3",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-stopwatch": "^2.0.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
