@@ -30,7 +30,6 @@ const Home = ({ auth }) => {
   const [plannedTasks, setPlannedTasks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [customers, setCustomers] = useState([]);
   const [tasks, setTasks] = useState([]);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -92,14 +91,6 @@ const Home = ({ auth }) => {
         prjs.push(doc.data());
       });
       setProjects(prjs);
-    });
-
-    onSnapshot(collection(db, "customers"), (snapshot) => {
-      let custs = [];
-      snapshot.forEach((doc) => {
-        custs.push(doc.data());
-      });
-      setCustomers(custs);
     });
 
     onSnapshot(collection(db, "tasks"), (snapshot) => {

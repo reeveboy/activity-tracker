@@ -4,12 +4,14 @@ import Modal from "../components/Modal";
 import { withProtected } from "../src/hooks/route";
 import {
   collection,
+  deleteDoc,
   doc,
   getFirestore,
   onSnapshot,
   orderBy,
   query,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { app } from "../src/config/firebase.config";
 import { useEffect, useState } from "react";
@@ -28,7 +30,7 @@ const Categories = ({ auth }) => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const cats = [];
       snapshot.forEach((doc) => {
-        cats.push(doc.data());
+        cats.push({ id: doc.id, ...doc.data() });
       });
       setCategories(cats);
     });
@@ -39,6 +41,16 @@ const Categories = ({ auth }) => {
 
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const editClose = () => setEditModalOpen(false);
+  const editOpen = (cat) => {
+    setNewNameField(cat.categoryName);
+    setEditModalOpen(true);
+    setSelectedCategory(cat);
+  };
 
   const [nameField, setNameField] = useState("");
 
@@ -58,7 +70,29 @@ const Categories = ({ auth }) => {
     close();
   };
 
-  const form = () => {
+  const [newNameField, setNewNameField] = useState("");
+
+  const handleActiveChange = (e) => {
+    setNewNameField(e.target.value);
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    if (newNameField.length < 3) return;
+
+    updateDoc(doc(db, "categories", selectedCategory.id), {
+      categoryName: newNameField,
+    });
+
+    setNewNameField("");
+    editClose();
+  };
+
+  const deleteCategory = (cat) => {
+    return deleteDoc(doc(db, "categories", cat.id));
+  };
+
+  const addForm = () => {
     return (
       <div>
         <form onSubmit={handleSubmit} className="flex flex-col items-center">
@@ -67,6 +101,26 @@ const Categories = ({ auth }) => {
             className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2"
             type="text"
             placeholder="category name"
+          />
+
+          <div className="mt-2">
+            <button className="py-2 px-5 bg-orange rounded-lg">Add</button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
+  const editForm = () => {
+    return (
+      <div>
+        <form onSubmit={handleUpdate} className="flex flex-col items-center">
+          <input
+            onChange={handleActiveChange}
+            className="mt-2 rounded-md bg-white border border-black w-[300px] px-3 py-2"
+            type="text"
+            placeholder="category name"
+            value={newNameField}
           />
 
           <div className="mt-2">
@@ -92,12 +146,55 @@ const Categories = ({ auth }) => {
         <thead>
           <tr className="text-left text-lg bg-slate-200 border-b border-slate-500">
             <td className="py-3 px-4">Category</td>
+            <td></td>
+            <td></td>
           </tr>
         </thead>
         <tbody>
           {categories.map((category, idx) => (
             <tr key={idx} className="text-left border-b border-slate-500">
               <td className="py-3 px-4">{category.categoryName}</td>
+              <td>
+                <button
+                  title="edit"
+                  onClick={() => {
+                    editModalOpen ? editClose() : editOpen(category);
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                    />
+                  </svg>
+                </button>
+              </td>
+              <td>
+                <button
+                  className=""
+                  title="delete"
+                  onClick={() => deleteCategory(category)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    class="bi bi-trash"
+                    viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                    />
+                  </svg>
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -108,7 +205,20 @@ const Categories = ({ auth }) => {
         onExitComplete={() => null}
         exitBeforeEnter={true}>
         {modalOpen && (
-          <Modal handleClose={close} modalOpen={modalOpen} text={form()} />
+          <Modal handleClose={close} modalOpen={modalOpen} text={addForm()} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence
+        initial={false}
+        onExitComplete={() => null}
+        exitBeforeEnter={true}>
+        {editModalOpen && (
+          <Modal
+            handleClose={editClose}
+            modalOpen={editModalOpen}
+            text={editForm()}
+          />
         )}
       </AnimatePresence>
     </Layout>
