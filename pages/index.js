@@ -7,6 +7,7 @@ import { getToday } from "../utils/getToday";
 import { getWeek } from "../utils/getWeek";
 import {
   collection,
+  deleteDoc,
   doc,
   getFirestore,
   onSnapshot,
@@ -179,6 +180,96 @@ const Home = ({ auth }) => {
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
 
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editTask, setEditTask] = useState(null);
+
+  const editClose = () => setEditModalOpen(false);
+  const editOpen = (tsk) => {
+    // setNewCategory(tsk.category);
+    setEditModalOpen(true);
+    setEditTask(tsk);
+  };
+
+  const [newCategory, setNewCategory] = useState(null);
+  const [newProject, setNewProject] = useState(null);
+
+  const handleActiveChange = (e) => {
+    // setNewCategory(e.target.value);
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    if (!newCategory) return;
+
+    updateDoc(doc(db, "planned_tasks", editTask.id), {
+      category: newCategory[0].categoryName,
+    });
+
+    setNewCategory(null);
+    editClose();
+  };
+
+  const deleteTask = (tsk) => {
+    return deleteDoc(doc(db, "planned_tasks", tsk.id));
+  };
+
+  const editForm = () => {
+    return (
+      <div className="w-[700px]">
+        <form onSubmit={handleUpdate} className="flex flex-col items-center">
+          <Typeahead
+            items={categories}
+            setSelected={setNewCategory}
+            field={"categoryName"}
+            placeholder={editTask.category}
+            len={0}
+          />
+          <Typeahead
+            items={projects}
+            setSelected={setNewProject}
+            field={"projectCode"}
+            placeholder={editTask.projectCode}
+            len={1}
+          />
+          <input
+            className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
+            type="text"
+            placeholder="customer"
+            value={newProject ? newProject[0].customerName : editTask.customer}
+            disabled
+          />
+          <Typeahead
+            items={tasks}
+            setSelected={setSelectedTask}
+            field={"taskName"}
+            placeholder={editTask.task}
+            len={0}
+          />
+          <input
+            className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
+            type="text"
+            placeholder="description"
+            onChange={handleDescriptionChange}
+            value={editTask.description}
+          />
+          <input
+            className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
+            type="number"
+            placeholder="hrs planned"
+            value={editTask.plannedHrs}
+            onChange={handleHrsPlannedChange}
+            required
+          />
+          <button
+            type="submit"
+            className="mt-4 w-full py-2 px-5 bg-orange rounded-lg">
+            Add
+          </button>
+        </form>
+      </div>
+    );
+  };
+
   const form = () => {
     return (
       <div className="w-[700px]">
@@ -262,7 +353,7 @@ const Home = ({ auth }) => {
                   <span>{activeTask.description}</span>
                 </Tooltip>
               }>
-              <button className="">
+              <button>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
@@ -326,6 +417,8 @@ const Home = ({ auth }) => {
             <th className="text-center">Planned Hrs</th>
             <th className="text-center">Actual Hrs</th>
             <th></th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -363,42 +456,75 @@ const Home = ({ auth }) => {
               <td className="text-center">{tsk.actualHrs}</td>
               <td>
                 {tsk == activeTask ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    xlink="http://www.w3.org/1999/xlink"
-                    aria-hidden="true"
-                    role="img"
-                    width="30"
-                    height="30"
-                    preserveAspectRatio="xMidYMid meet"
-                    viewBox="0 0 1024 1024">
-                    <path
-                      fill="black"
-                      d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448s448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372s372 166.6 372 372s-166.6 372-372 372zm-88-532h-48c-4.4 0-8 3.6-8 8v304c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V360c0-4.4-3.6-8-8-8zm224 0h-48c-4.4 0-8 3.6-8 8v304c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V360c0-4.4-3.6-8-8-8z"
-                    />
-                  </svg>
-                ) : (
-                  <button onClick={() => handleStartActiveTask(tsk)}>
+                  <button>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      xlink="http://www.w3.org/1999/xlink"
-                      aria-hidden="true"
-                      role="img"
-                      width="30"
-                      height="30"
-                      preserveAspectRatio="xMidYMid meet"
-                      viewBox="0 0 1024 1024">
-                      <path
-                        fill="black"
-                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448s448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372s372 166.6 372 372s-166.6 372-372 372z"
-                      />
-                      <path
-                        fill="black"
-                        d="m719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512L461.8 633.1z"
-                      />
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      class="bi bi-pause-circle"
+                      viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                      <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z" />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    title="start timer"
+                    onClick={() => handleStartActiveTask(tsk)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      class="bi bi-play-circle"
+                      viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                      <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z" />
                     </svg>
                   </button>
                 )}
+              </td>
+              <td className="mr-2">
+                <button
+                  title="edit"
+                  onClick={() => {
+                    editOpen(tsk);
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                    />
+                  </svg>
+                </button>
+              </td>
+              <td className="mr-2">
+                <button
+                  className=""
+                  title="delete"
+                  onClick={() => deleteTask(tsk)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    class="bi bi-trash"
+                    viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                    />
+                  </svg>
+                </button>
               </td>
             </tr>
           ))}
@@ -416,6 +542,19 @@ const Home = ({ auth }) => {
         exitBeforeEnter={true}>
         {modalOpen && (
           <Modal handleClose={close} modalOpen={modalOpen} text={form()} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence
+        initial={false}
+        onExitComplete={() => null}
+        exitBeforeEnter={true}>
+        {editModalOpen && (
+          <Modal
+            handleClose={editClose}
+            modalOpen={editModalOpen}
+            text={editForm()}
+          />
         )}
       </AnimatePresence>
     </Layout>
