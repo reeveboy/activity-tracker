@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
+import Link from "next/link";
 
 const NavButton = ({ svg, name }) => {
   const router = useRouter();
@@ -10,30 +11,29 @@ const NavButton = ({ svg, name }) => {
   ) {
     check = true;
   }
-  const handleClick = () => {
+  const getRoute = () => {
     if (name == "Tracker") {
-      router.push("/");
-      return;
+      return "/";
     }
-    router.push(`/${name.toLowerCase()}`);
+    return `/${name.toLowerCase()}`;
   };
   if (check) {
     return (
-      <button
-        onClick={handleClick}
-        className="p-3 border-b border-r-4 bg-gray-100 border-pri flex items-center hover:bg-gray-300">
-        {svg}
-        <span className="text-lg ml-4">{name}</span>
-      </button>
+      <Link href={getRoute()}>
+        <a className="p-3 text-decoration-none text-black border-b border-r-4 bg-gray-100 border-pri flex items-center hover:bg-gray-300">
+          {svg}
+          <span className="text-lg ml-4">{name}</span>
+        </a>
+      </Link>
     );
   }
   return (
-    <button
-      onClick={handleClick}
-      className="p-3 border-b border-black flex items-center hover:bg-gray-300">
-      {svg}
-      <span className="text-lg ml-4">{name}</span>
-    </button>
+    <Link href={getRoute()}>
+      <a className="p-3 text-decoration-none text-black border-b border-black flex items-center hover:bg-gray-300">
+        {svg}
+        <span className="text-lg ml-4">{name}</span>
+      </a>
+    </Link>
   );
 };
 

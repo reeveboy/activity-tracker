@@ -21,7 +21,7 @@ const CustomerTypeahead = ({
       <Typeahead
         id={`${field}-typeahead`}
         className="typeahead"
-        style={{ height: "40px", width: "300px", marginTop: "1rem" }}
+        style={{ height: "40px", width: "100%", marginTop: "1rem" }}
         labelKey={field}
         onChange={(item) => {
           setSelected(item);

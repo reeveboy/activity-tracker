@@ -10,10 +10,10 @@ import {
   doc,
   getFirestore,
   onSnapshot,
-  orderBy,
   query,
   serverTimestamp,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { app } from "../src/config/firebase.config";
@@ -63,9 +63,8 @@ const Home = ({ auth }) => {
     onSnapshot(q, (snapshot) => {
       let tsks = [];
       snapshot.forEach((doc) => {
-        tsks.push(doc.data());
+        tsks.push({ id: doc.id, ...doc.data() });
       });
-      console.log(tsks);
       setPlannedTasks(tsks);
     });
   };
@@ -110,13 +109,26 @@ const Home = ({ auth }) => {
     return total;
   };
 
+  const [stopWatchParams, setStopWatchParams] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
   const handleStartActiveTask = (task) => {
-    console.log(task);
     setActiveTask(task);
     setShowTimer(true);
+    let time = [];
+    task.actualHrs.split(":").forEach((n) => {
+      time.push(parseInt(n));
+    });
+    setStopWatchParams({ hours: time[0], minutes: time[1], seconds: time[2] });
   };
 
-  const handleStopActiveTask = () => {
+  const handleStopActiveTask = (time) => {
+    updateDoc(doc(db, "planned_tasks", activeTask.id), {
+      actualHrs: time,
+    });
     setActiveTask(null);
     setShowTimer(false);
   };
@@ -147,7 +159,7 @@ const Home = ({ auth }) => {
       task: selectedTask[0].taskName,
       description: description,
       plannedHrs: hrsPlanned,
-      actualHrs: 0,
+      actualHrs: "00:00:00",
       actualScs: 0,
       timeCreated: serverTimestamp(),
     };
@@ -169,7 +181,7 @@ const Home = ({ auth }) => {
 
   const form = () => {
     return (
-      <div>
+      <div className="w-[700px]">
         <form onSubmit={handleSubmit} className="flex flex-col items-center">
           <Typeahead
             items={categories}
@@ -186,7 +198,7 @@ const Home = ({ auth }) => {
             len={1}
           />
           <input
-            className="mt-4 rounded-md bg-white border border-black w-[300px] px-3 py-2"
+            className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
             type="text"
             value={selectedProject ? selectedProject[0].customerName : ""}
             placeholder="customer"
@@ -200,13 +212,13 @@ const Home = ({ auth }) => {
             len={0}
           />
           <input
-            className="mt-4 rounded-md bg-white border border-black w-[300px] px-3 py-2"
+            className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
             type="text"
             placeholder="description"
             onChange={handleDescriptionChange}
           />
           <input
-            className="mt-4 rounded-md bg-white border border-black w-[300px] px-3 py-2"
+            className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
             type="number"
             placeholder="hrs planned"
             onChange={handleHrsPlannedChange}
@@ -224,7 +236,7 @@ const Home = ({ auth }) => {
   return (
     <Layout user={user}>
       <div className="flex items-center">
-        <span className="mr-3 text-xl font-bold">Week {week}</span>
+        <span className="text-3xl font-bold">Week {week}</span>
       </div>
       <div className="flex justify-between items-center mt-4">
         <div className="flex items-center ">
@@ -256,7 +268,7 @@ const Home = ({ auth }) => {
                   width="25"
                   height="25"
                   fill="currentColor"
-                  class="bi bi-info-circle"
+                  className="bi bi-info-circle"
                   viewBox="0 0 16 16">
                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                   <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
@@ -266,19 +278,23 @@ const Home = ({ auth }) => {
           </div>
           <div className="flex items-center">
             <Stopwatch
-              seconds={0}
-              minutes={0}
-              hours={0}
+              seconds={stopWatchParams.seconds}
+              minutes={stopWatchParams.minutes}
+              hours={stopWatchParams.hours}
               autoStart={showTimer}
               render={({ formatted }) => {
-                return <span className="text-4xl">{formatted}</span>;
+                return (
+                  <>
+                    <span className="text-4xl">{formatted}</span>
+                    <button
+                      onClick={() => handleStopActiveTask(formatted)}
+                      className="bg-red-500 px-3 py-2 text-white rounded-md ml-4">
+                      Stop
+                    </button>
+                  </>
+                );
               }}
             />
-            <button
-              onClick={handleStopActiveTask}
-              className="bg-red-500 px-3 py-2 text-white rounded-md ml-4">
-              Stop
-            </button>
           </div>
         </div>
       ) : (
@@ -322,7 +338,7 @@ const Home = ({ auth }) => {
                 <div className="flex items-center">
                   <span>{tsk.task}</span>
                   <OverlayTrigger
-                    placement="right"
+                    placement="top"
                     overlay={
                       <Tooltip>
                         <span>{tsk.description}</span>
