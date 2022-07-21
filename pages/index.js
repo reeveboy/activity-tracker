@@ -22,6 +22,7 @@ import Typeahead from "../components/Typeahead";
 import Stopwatch from "react-stopwatch";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import { getRoundedHours } from "../utils/getRoundedHours";
 
 const Home = ({ auth }) => {
   const { user } = auth;
@@ -127,8 +128,10 @@ const Home = ({ auth }) => {
   };
 
   const handleStopActiveTask = (time) => {
+    const roundedHrs = getRoundedHours(time);
     updateDoc(doc(db, "planned_tasks", activeTask.id), {
       actualHrs: time,
+      roundedHrs,
     });
     setActiveTask(null);
     setShowTimer(false);
@@ -162,7 +165,7 @@ const Home = ({ auth }) => {
       plannedHrs: hrsPlanned,
       actualHrs: "00:00:00",
       actualScs: 0,
-      timeCreated: serverTimestamp(),
+      roundedHrs: "0",
     };
     await setDoc(doc(collection(db, "planned_tasks")), data);
 
