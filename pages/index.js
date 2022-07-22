@@ -9,10 +9,11 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
+  getDocsFromServer,
   getFirestore,
   onSnapshot,
   query,
-  serverTimestamp,
   setDoc,
   updateDoc,
   where,
@@ -164,7 +165,6 @@ const Home = ({ auth }) => {
       description: description,
       plannedHrs: hrsPlanned,
       actualHrs: "00:00:00",
-      actualScs: 0,
       roundedHrs: "0",
     };
     await setDoc(doc(collection(db, "planned_tasks")), data);
@@ -456,7 +456,7 @@ const Home = ({ auth }) => {
                 </div>
               </td>
               <td className="text-center">{tsk.plannedHrs}</td>
-              <td className="text-center">{tsk.actualHrs}</td>
+              <td className="text-center">{tsk.roundedHrs}</td>
               <td>
                 {tsk == activeTask ? (
                   <button>
