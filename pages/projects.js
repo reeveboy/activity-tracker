@@ -171,7 +171,7 @@ const Projects = ({ auth }) => {
   };
 
   return (
-    <Layout user={user}>
+    <Layout auth={auth}>
       <div className="flex justify-between">
         <span className="text-xl ">Projects</span>
         <button

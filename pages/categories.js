@@ -132,7 +132,7 @@ const Categories = ({ auth }) => {
   };
 
   return (
-    <Layout user={user}>
+    <Layout auth={auth}>
       <div className="flex justify-between">
         <span className="text-xl ">Categories</span>
         <button

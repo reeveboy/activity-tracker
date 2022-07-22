@@ -328,7 +328,7 @@ const Home = ({ auth }) => {
     );
   };
   return (
-    <Layout user={user}>
+    <Layout auth={auth}>
       <div className="flex items-center">
         <span className="text-3xl font-bold">Week {week}</span>
       </div>

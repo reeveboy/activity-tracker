@@ -22,7 +22,7 @@ const Team = ({ auth }) => {
   }, []);
 
   return (
-    <Layout user={user}>
+    <Layout auth={auth}>
       <span className="text-xl">Teams</span>
       <table className="mt-4 table-auto border border-slate-600 rounded-lg bg-white">
         <thead>

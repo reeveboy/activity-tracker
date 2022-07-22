@@ -6,7 +6,7 @@ import { withProtected } from "../src/hooks/route";
 const Reports = ({ auth }) => {
   const { user } = auth;
 
-  return <Layout user={user}>Reports</Layout>;
+  return <Layout auth={auth}>Reports</Layout>;
 };
 
 export default withProtected(Reports);
