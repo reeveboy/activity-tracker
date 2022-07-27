@@ -4,8 +4,6 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import { withProtected } from "../src/hooks/route";
 
 const Reports = ({ auth }) => {
-  const { user } = auth;
-
   return <Layout auth={auth}>Reports</Layout>;
 };
 

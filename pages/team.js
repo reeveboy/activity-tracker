@@ -5,8 +5,6 @@ import { app } from "../src/config/firebase.config";
 import { withProtected } from "../src/hooks/route";
 
 const Team = ({ auth }) => {
-  const { user } = auth;
-
   const db = getFirestore(app);
 
   const [users, setUsers] = useState([]);

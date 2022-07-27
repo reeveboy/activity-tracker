@@ -19,8 +19,6 @@ import { AnimatePresence } from "framer-motion";
 import Layout from "../components/Layout/Layout";
 
 const Customers = ({ auth }) => {
-  const { user } = auth;
-
   const db = getFirestore(app);
 
   const [customers, setCustomers] = useState([]);

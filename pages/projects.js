@@ -19,8 +19,6 @@ import Typeahead from "../components/Typeahead";
 import Layout from "../components/Layout/Layout";
 
 const Projects = ({ auth }) => {
-  const { user } = auth;
-
   const db = getFirestore(app);
 
   const [projects, setProjects] = useState([]);
