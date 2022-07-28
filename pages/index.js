@@ -9,8 +9,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
-  getDocsFromServer,
   getFirestore,
   onSnapshot,
   query,
@@ -24,6 +22,7 @@ import Stopwatch from "react-stopwatch";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { getRoundedHours } from "../utils/getRoundedHours";
+import { getHrsAsString } from "../utils/getHrsAsString";
 
 const Home = ({ auth }) => {
   const { user } = auth;
@@ -169,9 +168,9 @@ const Home = ({ auth }) => {
     };
     await setDoc(doc(collection(db, "planned_tasks")), data);
 
-    setCategories(null);
-    setProjects(null);
-    setTasks(null);
+    setSelectedCategory(null);
+    setSelectedProject(null);
+    setSelectedTask(null);
     setDescription(null);
     setHrsPlanned(null);
 
@@ -188,27 +187,56 @@ const Home = ({ auth }) => {
 
   const editClose = () => setEditModalOpen(false);
   const editOpen = (tsk) => {
-    // setNewCategory(tsk.category);
+    setSelectedCategory([
+      categories.find((cat) => {
+        if (cat.categoryName === tsk.category) return cat;
+      }),
+    ]);
+    setSelectedProject([
+      projects.find((proj) => {
+        if (proj.projectCode === tsk.projectCode) return proj;
+      }),
+    ]);
+    setSelectedTask([
+      tasks.find((task) => {
+        if (task.taskName === tsk.task) return task;
+      }),
+    ]);
+    setDescription(tsk.description);
+    setNewHrs(parseFloat(tsk.roundedHrs));
+
     setEditModalOpen(true);
     setEditTask(tsk);
   };
 
-  const [newCategory, setNewCategory] = useState(null);
-  const [newProject, setNewProject] = useState(null);
+  const [newHrs, setNewHrs] = useState(0);
+  const [newActualHrs, setNewActualHrs] = useState("");
 
-  const handleActiveChange = (e) => {
-    // setNewCategory(e.target.value);
+  const handleHrsChange = (e) => {
+    setNewHrs(e.target.value);
+    setNewActualHrs(getHrsAsString(e.target.value));
   };
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    if (!newCategory) return;
 
     updateDoc(doc(db, "planned_tasks", editTask.id), {
-      category: newCategory[0].categoryName,
+      category: selectedCategory[0].categoryName,
+      projectCode: selectedProject[0].projectCode,
+      customer: selectedProject[0].customerName,
+      task: selectedTask[0].taskName,
+      description: description,
+      roundedHrs: newHrs,
+      actualHrs: newActualHrs,
     });
 
-    setNewCategory(null);
+    // setNewCategory(null);
+    setSelectedCategory(null);
+    setSelectedProject(null);
+    setSelectedTask(null);
+    setDescription(null);
+    setNewHrs(null);
+    setNewActualHrs("");
     editClose();
   };
 
@@ -222,46 +250,44 @@ const Home = ({ auth }) => {
         <form onSubmit={handleUpdate} className="flex flex-col items-center">
           <Typeahead
             items={categories}
-            setSelected={setNewCategory}
+            setSelected={setSelectedCategory}
             field={"categoryName"}
-            placeholder={editTask.category}
+            placeholder={selectedCategory[0].categoryName}
             len={0}
           />
           <Typeahead
             items={projects}
-            setSelected={setNewProject}
+            setSelected={setSelectedProject}
             field={"projectCode"}
-            placeholder={editTask.projectCode}
+            placeholder={selectedProject[0].projectCode}
             len={1}
           />
           <input
             className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
             type="text"
             placeholder="customer"
-            value={newProject ? newProject[0].customerName : editTask.customer}
+            value={selectedProject[0].customerName}
             disabled
           />
           <Typeahead
             items={tasks}
             setSelected={setSelectedTask}
             field={"taskName"}
-            placeholder={editTask.task}
+            placeholder={selectedTask[0].taskName}
             len={0}
           />
           <input
             className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
             type="text"
-            placeholder="description"
+            placeholder={description}
             onChange={handleDescriptionChange}
-            value={editTask.description}
           />
           <input
             className="mt-4 rounded-md bg-white border border-black w-full px-3 py-2"
             type="number"
-            placeholder="hrs planned"
-            value={editTask.plannedHrs}
-            onChange={handleHrsPlannedChange}
-            required
+            placeholder={newHrs}
+            onChange={handleHrsChange}
+            step="0.25"
           />
           <button
             type="submit"
