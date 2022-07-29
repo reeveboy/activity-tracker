@@ -430,6 +430,7 @@ const Home = ({ auth }) => {
           <option value="You">You</option>
         </select>
         <button
+          disabled={showTimer}
           onClick={() => (modalOpen ? close() : open())}
           className="py-2 px-3 bg-orange rounded-lg">
           Add Task
@@ -499,6 +500,7 @@ const Home = ({ auth }) => {
                   </button>
                 ) : (
                   <button
+                    disabled={showTimer}
                     title="start timer"
                     onClick={() => handleStartActiveTask(tsk)}>
                     <svg
@@ -516,6 +518,7 @@ const Home = ({ auth }) => {
               </td>
               <td className="mr-2">
                 <button
+                  disabled={showTimer}
                   title="edit"
                   onClick={() => {
                     editOpen(tsk);
