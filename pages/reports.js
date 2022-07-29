@@ -46,7 +46,7 @@ const Reports = ({ auth }) => {
     });
   }, []);
 
-  return <Layout auth={auth}>Reports {doughData.totalHrs}</Layout>;
+  return <Layout auth={auth}>reports under construction...</Layout>;
 };
 
 export default withProtected(Reports);

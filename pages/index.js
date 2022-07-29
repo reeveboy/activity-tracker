@@ -33,6 +33,7 @@ const Home = ({ auth }) => {
   const [categories, setCategories] = useState([]);
   const [projects, setProjects] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -43,6 +44,7 @@ const Home = ({ auth }) => {
   const [showTimer, setShowTimer] = useState(false);
 
   const [activeTask, setActiveTask] = useState(null);
+  const [activeUser, setActiveUser] = useState(user.uid);
 
   const d = new Date();
   const [date, setDate] = useState(getToday(d));
@@ -58,7 +60,7 @@ const Home = ({ auth }) => {
   const fetchDayTasks = () => {
     const q = query(
       collection(db, "planned_tasks"),
-      where("userId", "==", user.uid),
+      where("userId", "==", activeUser),
       where("day", "==", date)
     );
 
@@ -73,7 +75,7 @@ const Home = ({ auth }) => {
 
   useEffect(() => {
     fetchDayTasks();
-  }, [date, week]);
+  }, [date, week, activeUser]);
 
   useEffect(() => {
     configureDateAndWeek(new Date());
@@ -100,6 +102,14 @@ const Home = ({ auth }) => {
         tsks.push(doc.data());
       });
       setTasks(tsks);
+    });
+
+    onSnapshot(collection(db, "users"), (snapshot) => {
+      let usrs = [];
+      snapshot.forEach((doc) => {
+        usrs.push({ id: doc.id, ...doc.data() });
+      });
+      setUsers(usrs);
     });
   }, []);
 
@@ -155,7 +165,7 @@ const Home = ({ auth }) => {
     e.preventDefault();
 
     const data = {
-      userId: user.uid,
+      userId: activeUser,
       day: date,
       category: selectedCategory[0].categoryName,
       projectCode: selectedProject[0].projectCode,
@@ -242,6 +252,10 @@ const Home = ({ auth }) => {
 
   const deleteTask = (tsk) => {
     return deleteDoc(doc(db, "planned_tasks", tsk.id));
+  };
+
+  const handleUserChange = (e) => {
+    setActiveUser(e.target.value);
   };
 
   const editForm = () => {
@@ -353,6 +367,7 @@ const Home = ({ auth }) => {
       </div>
     );
   };
+
   return (
     <Layout auth={auth}>
       <div className="flex items-center">
@@ -423,11 +438,15 @@ const Home = ({ auth }) => {
 
       <div className="mt-4 flex justify-between">
         <select
-          defaultValue={"You"}
+          onChange={handleUserChange}
           className="rounded-md px-4 py-2 w-[200px] border-none bg-white"
           name="user"
           id="select_user">
-          <option value="You">You</option>
+          {users.map((usr, idx) => (
+            <option key={idx} value={usr.id}>
+              {usr.displayName}
+            </option>
+          ))}
         </select>
         <button
           disabled={showTimer}
