@@ -121,10 +121,12 @@ const Home = ({ auth }) => {
 
   const calcHrs = () => {
     let total = 0;
+    let actual = 0;
     plannedTasks.forEach((task) => {
       total += parseInt(task.plannedHrs);
+      actual += parseFloat(task.roundedHrs);
     });
-    return total;
+    return `${actual} / ${total}`;
   };
 
   const [stopWatchParams, setStopWatchParams] = useState({
@@ -591,7 +593,7 @@ const Home = ({ auth }) => {
 
       <div className="mt-4 text-right text-2xl">
         <span>Hrs Completed = </span>
-        <span className="text-3xl">0 / {calcHrs()}</span>
+        <span className="text-3xl">{calcHrs()}</span>
       </div>
 
       <AnimatePresence
