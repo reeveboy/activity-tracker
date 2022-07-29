@@ -45,6 +45,7 @@ const Home = ({ auth }) => {
 
   const [activeTask, setActiveTask] = useState(null);
   const [activeUser, setActiveUser] = useState(user.uid);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const d = new Date();
   const [date, setDate] = useState(getToday(d));
@@ -108,6 +109,11 @@ const Home = ({ auth }) => {
       let usrs = [];
       snapshot.forEach((doc) => {
         usrs.push({ id: doc.id, ...doc.data() });
+
+        if (doc.id == user.uid) {
+          const { isAdmin } = doc.data();
+          setIsAdmin(isAdmin ? true : false);
+        }
       });
       setUsers(usrs);
     });
@@ -438,12 +444,13 @@ const Home = ({ auth }) => {
 
       <div className="mt-4 flex justify-between">
         <select
+          disabled={!isAdmin}
           onChange={handleUserChange}
           className="rounded-md px-4 py-2 w-[200px] border-none bg-white"
           name="user"
           id="select_user">
           {users.map((usr, idx) => (
-            <option key={idx} value={usr.id}>
+            <option selected={usr.id == user.uid} key={idx} value={usr.id}>
               {usr.displayName}
             </option>
           ))}

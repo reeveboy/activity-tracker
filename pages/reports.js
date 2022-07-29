@@ -44,6 +44,8 @@ const Reports = ({ auth }) => {
       });
       setDoughData({ totalHrs: total });
     });
+
+    console.log(tasks, doughData);
   }, []);
 
   return <Layout auth={auth}>reports under construction...</Layout>;
