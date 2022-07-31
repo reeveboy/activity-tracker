@@ -1,8 +1,34 @@
 import React, { useState } from "react";
 import NavButton from "./NavButton";
-import { useRouter } from "next/router";
+import Modal from "../Modal";
+import { AnimatePresence } from "framer-motion";
 
 const Sidebar = ({ logout }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const close = () => setModalOpen(false);
+  const open = () => setModalOpen(true);
+
+  const modal_div = () => {
+    return (
+      <div className="py-2 px-4">
+        <span className="text-xl font-medium"> Are you sure?</span>
+        <div className="mt-2">
+          <button
+            className="bg-blue-500 px-5 py-3 rounded-md text-lg font-bold"
+            onClick={logout}>
+            Yes
+          </button>
+          <button
+            className="bg-red-500 px-5 py-3 rounded-md ml-4 text-lg font-bold"
+            onClick={close}>
+            No
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const icon_size = 25;
 
   const links = [
@@ -129,7 +155,7 @@ const Sidebar = ({ logout }) => {
       <NavButton svg={links[4].icon} name={links[4].text} />
       <NavButton svg={links[5].icon} name={links[5].text} />
       <button
-        onClick={logout}
+        onClick={open}
         className="p-3 text-decoration-none text-black border-b border-black flex items-center hover:bg-gray-300">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -149,6 +175,14 @@ const Sidebar = ({ logout }) => {
         </svg>
         <span className="text-lg ml-4">Logout</span>
       </button>
+      <AnimatePresence
+        initial={false}
+        onExitComplete={() => null}
+        exitBeforeEnter={true}>
+        {modalOpen && (
+          <Modal handleClose={close} modalOpen={modalOpen} text={modal_div()} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
