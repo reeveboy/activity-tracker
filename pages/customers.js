@@ -122,7 +122,7 @@ const Customers = ({ auth }) => {
           />
 
           <div className="mt-2">
-            <button className="py-2 px-5 bg-orange rounded-lg">Add</button>
+            <button className="py-2 px-5 bg-orange rounded-lg">Edit</button>
           </div>
         </form>
       </div>

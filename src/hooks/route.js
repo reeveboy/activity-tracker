@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Loading from "../../components/Loading";
 import useAuth from "./auth";
 
 export function withPublic(Component) {
@@ -8,7 +9,7 @@ export function withPublic(Component) {
 
     if (auth.user) {
       router.replace("/");
-      return <h1>Loading...</h1>;
+      return <Loading />;
     }
 
     return <Component auth={auth} {...props} />;
@@ -22,7 +23,7 @@ export function withProtected(Component) {
 
     if (!auth.user) {
       router.replace("/login");
-      return <h1>Loading...</h1>;
+      return <Loading />;
     }
 
     return <Component auth={auth} {...props} />;

@@ -7,6 +7,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
+import Loading from "../components/Loading";
 import { app } from "../src/config/firebase.config";
 import { withProtected } from "../src/hooks/route";
 
@@ -48,7 +49,11 @@ const Reports = ({ auth }) => {
     console.log(tasks, doughData);
   }, []);
 
-  return <Layout auth={auth}>reports under construction...</Layout>;
+  return (
+    <Layout auth={auth}>
+      <span className="capitalize text-xl">reports under construction...</span>
+    </Layout>
+  );
 };
 
 export default withProtected(Reports);

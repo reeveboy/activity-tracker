@@ -314,7 +314,7 @@ const Home = ({ auth }) => {
           <button
             type="submit"
             className="mt-4 w-full py-2 px-5 bg-orange rounded-lg">
-            Add
+            Edit
           </button>
         </form>
       </div>
